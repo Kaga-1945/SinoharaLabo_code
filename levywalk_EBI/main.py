@@ -10,14 +10,15 @@ def generate_data(mu, cov, step):
 
 class EMA:
     def __init__(self, mu, alpha):
-        self.mu = mu
+        self.mu = np.array([mu])
         self.alpha = alpha
         self.orbit = mu
         self.track = []
 
-    def ema(self, d):
+    def Ema(self, d):
         distance = self.alpha * (d - self.mu)
-        self.mu += distance
+        mu_x, mu_y = distance[0]
+        self.mu += np.array([mu_x, mu_y])
         self.track.append(np.linalg.norm(distance))
         self.orbit = np.vstack([self.orbit, self.mu])
     
@@ -82,13 +83,13 @@ cov_true = np.array([[0.0025, 0], [0, 0.0025]])  # 生成元の分散パラメ�
 d = generate_data(mu_true, cov_true, step)  # データの生成
 mu = np.array([0.0, 0.0])  # 平均の推定初期値
 cov = np.array([[0.05, 0.0], [0.0, 0.05]]) 
-#alpha = 0.0001
-alpha = 0.00005
+#alpha_ebi = 0.0001
+alpha_ema = 0.00005
 delta = 0.01
-ebi = EBI(mu, cov, alpha, delta)
-ema = EMA(mu, alpha)
+#ebi = EBI(mu, cov, alpha_ebi, delta)
+ema = EMA(mu, alpha_ema)
 for i in range(step):
-    ema.ema(d[:, 1])
+    ema.Ema(d[:, i])
     #ebi.Equal(d[:, i])
     #ebi.Rand(d[:, i])
 """
@@ -111,7 +112,7 @@ ax1.plot(*ema.orbit[100000:200000, :].T, color="blue", linewidth=1, zorder=1, la
 #ax1.plot(*ebi.orbit.T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
 ax1.scatter(*mu_true, color="orange", s=50, zorder=3, label="Center of date generating distribution")
 #ax1.scatter(*ebi.mu[0], color="red", s=50, zorder=2, label="The final mean estimate")
-ax1.scatter(*ema.mu, color="red", s=50, zorder=2, label="The final mean estimate")
+ax1.scatter(*ema.mu[0], color="red", s=50, zorder=2, label="The final mean estimate")
 ax1.set_xlabel('X-axis')
 ax1.set_ylabel('Y-axis')
 ax1.legend()
