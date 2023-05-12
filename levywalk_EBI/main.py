@@ -76,8 +76,8 @@ class EBI:
         self.mu += np.array([mu_x, mu_y])
         self.orbit = np.vstack([self.orbit, self.mu])
 
-#step = 300000
-step = 200000
+step = 300000
+#step = 200000
 mu_true = np.array([0.3, 0.3])  # 生成元の平均パラメータ
 cov_true = np.array([[0.0025, 0], [0, 0.0025]])  # 生成元の分散パラメータ
 d = generate_data(mu_true, cov_true, step)  # データの生成
@@ -90,6 +90,7 @@ delta = 0.01
 ema = EMA(mu, alpha_ema)
 for i in range(step):
     ema.Ema(d[:, i])
+    #ebi.Min(d[:, i])
     #ebi.Equal(d[:, i])
     #ebi.Rand(d[:, i])
 """
@@ -99,7 +100,8 @@ with open('result_Rand.bin', 'wb') as p:
 """
 #track = np.array(ebi.track[200000:300000])
 #track = np.array(ebi.track[100000:200000])
-track = np.array(ema.track[100000:200000])
+#track = np.array(ema.track[100000:200000])
+track = np.array(ema.track[200000:300000])
 #track = np.array(ebi.track)
 rank = np.argsort(np.argsort(track))
 track = np.sort(track)[::-1]
@@ -107,7 +109,7 @@ rank.sort()
 fig_1 = plt.figure(figsize=(8, 8))
 ax1 = fig_1.add_subplot()
 #ax1.plot(*ebi.orbit[100000:200000, :].T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
-ax1.plot(*ema.orbit[100000:200000, :].T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
+ax1.plot(*ema.orbit[200000:300000, :].T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
 #ax1.plot(*ebi.orbit[200000:300000, :].T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
 #ax1.plot(*ebi.orbit.T, color="blue", linewidth=1, zorder=1, label="Traject of the mean estimate")
 ax1.scatter(*mu_true, color="orange", s=50, zorder=3, label="Center of date generating distribution")
