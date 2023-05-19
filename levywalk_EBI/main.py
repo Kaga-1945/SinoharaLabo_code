@@ -94,6 +94,35 @@ class EBI:
         self.mu += np.array([mu_x, mu_y])
         self.orbit = np.vstack([self.orbit, self.mu])
 
+    def Rand_2(self, d):
+        theta = np.random.rand() * (np.pi * 2)
+        sin = np.sin(theta)
+        cos = np.cos(theta)
+        round_mat = np.array([[cos, -sin], [sin, cos]])
+        round_inv = np.array([[cos, sin], [-sin, cos]])
+        round_mu = np.dot(round_mat, self.mu.reshape(2, 1))
+        round_d = np.dot(round_mat, np.array([d]).reshape(2, 1))
+        A = round_d - round_mu
+        A = A.reshape(2, 1)
+        e = np.exp((-0.5) * np.dot(A.T, np.dot(self.inv_cov, A)))
+        delta_P = (self.alpha * (1 - e[0,0]) / self.delta_d)
+        direct = self.delta_d / (e[0,0] * np.dot(self.inv_cov, A))
+        direct = direct.reshape(1, 2)
+        wight = np.random.rand()
+        mu_x, mu_y = wight*delta_P*direct[0,0], (1-wight)*delta_P*direct[0,1]
+        mu_x, mu_y = np.dot(round_inv, np.array([[mu_x, mu_y]]).reshape(2, 1))
+        mu_x = mu_x[0]
+        mu_y = mu_y[0]
+        norm = np.linalg.norm(np.array([mu_x, mu_y]))
+        if norm >= self.delta:
+            mu_x, mu_y = 0.01 * (np.array([mu_x, mu_y]) / norm)
+        distance = np.linalg.norm(np.array([mu_x, mu_y]))
+        if distance >= 0.01:
+            distance = 0.01
+        self.track.append(distance)
+        self.mu += np.array([mu_x, mu_y])
+        self.orbit = np.vstack([self.orbit, self.mu])
+
 step = 300000
 mu_true = np.array([0.3, 0.3])  # 生成元の平均パラメータ
 cov_true = np.array([[0.0025, 0], [0, 0.0025]])  # 生成元の分散パラメータ
@@ -107,9 +136,10 @@ env = EBI(mu, cov, alpha_ebi, delta)
 #env = EMA(mu, alpha_ema)
 for i in range(step):
     #env.Ema(d[:, i])
-    env.Min(d[:, i])
+    #env.Min(d[:, i])
     #env.Equal(d[:, i])
     #env.Rand(d[:, i])
+    env.Rand_2(d[:, i])
 """
 with open('result_Rand.bin', 'wb') as p:
     pickle.dump(EBI.track, p)
