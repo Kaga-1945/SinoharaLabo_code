@@ -12,9 +12,9 @@ def Gaussian_distribution(generator_center, diagonal_matrix, step) -> list:
 
 def Uniform_distribution(generator_center, radius, step) -> list:
     """
-    2次元の正規分布を生成する
+    2次元の一様分布を生成する
     center: 分布の中心座標
-    radius: 分布の半径
+    radius: 分布の生成半径
     step: 生成する乱数の個数
     """
     theta = 2 * np.pi * np.random.rand(step)

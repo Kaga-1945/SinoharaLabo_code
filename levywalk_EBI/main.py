@@ -26,16 +26,16 @@ if __name__ == "__main__":
     agent_covariance = np.array([[0.05, 0.0], [0.0, 0.05]])  # エージェントの共分散の推定値の初期値(今回は固定)
 
     if agent_type == "EMA":
-        alpha = 0.00005  # 割引率
-        agent = models.Agent(estimate_center, agent_covariance, alpha)
+        β = 0.00005  # 割引率
+        agent = models.Agent(estimate_center, agent_covariance, β)
 
         for i in range(step):
             agent.EMA(sampling_data[:, i])
 
     elif agent_type == "Min" or agent_type == "Non_Min":
-        alpha = 0.0001  # 割引率
+        β = 0.0001  # 割引率
         delta = 0.01  # 修正上限値
-        agent = models.Agent(estimate_center, agent_covariance, alpha, delta)
+        agent = models.Agent(estimate_center, agent_covariance, β, delta)
 
         if agent_type == "Min":
             for i in range(step):
