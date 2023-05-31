@@ -1,13 +1,13 @@
 import numpy as np
 
 class Agent:
-    def __init__(self, agent_center, agent_covariance, alpha, delta=None):
+    def __init__(self, agent_center, agent_covariance_matrix, alpha, delta=None):
         self.agent_center = np.array([agent_center]) 
-        self.agent_covariance = agent_covariance
+        self.agent_covariance_matrix = agent_covariance_matrix
         self.alpha = alpha
         self.delta = delta
-        self.delta_d = np.sqrt((2*np.pi)**2 * np.linalg.det(self.agent_covariance))
-        self.inv_agent_covariance = np.linalg.inv(self.agent_covariance)
+        self.delta_d = np.sqrt((2*np.pi)**2 * np.linalg.det(self.agent_covariance_matrix))
+        self.inv_agent_covariance = np.linalg.inv(self.agent_covariance_matrix)
         self.orbit = agent_center
         self.track = []
 
@@ -35,7 +35,7 @@ class Agent:
             x_direction, y_direction = 0.01 * (np.array([x_direction, y_direction]) / movement_l)
             movement_l = np.linalg.norm(np.array([x_direction, y_direction]))
 
-            if  movement_l >= 0.01:  # 誤差修正
+            if  movement_l >= 0.01: 
                 movement_l = 0.01
 
         self.track.append(movement_l)
@@ -63,7 +63,7 @@ class Agent:
             x_direction, y_direction = 0.01 * (np.array([x_direction, y_direction]) / movement_l)
             movement_l = np.linalg.norm(np.array([x_direction, y_direction]))
             
-            if movement_l >= 0.01:  # 誤差修正
+            if movement_l >= 0.01:  
                 movement_l = 0.01
 
         self.track.append(movement_l)
