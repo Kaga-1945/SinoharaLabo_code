@@ -11,3 +11,6 @@ agent_center = np.array([0.0, 0.0])  # エージェントの推定値
 agent_covariance = np.array([[0.05, 0.0], [0.0, 0.05]])  # エージェントが持つ共分散行列
 delta = 0.01  # 移動量の上限値
 
+s_priod = 200000
+e_priod = 300000
+

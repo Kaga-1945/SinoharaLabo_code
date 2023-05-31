@@ -35,7 +35,7 @@ class Agent:
             x_direction, y_direction = 0.01 * (np.array([x_direction, y_direction]) / movement_l)
             movement_l = np.linalg.norm(np.array([x_direction, y_direction]))
 
-            if  movement_l >= 0.01:
+            if  movement_l >= 0.01:  # 誤差修正
                 movement_l = 0.01
 
         self.track.append(movement_l)
@@ -63,7 +63,7 @@ class Agent:
             x_direction, y_direction = 0.01 * (np.array([x_direction, y_direction]) / movement_l)
             movement_l = np.linalg.norm(np.array([x_direction, y_direction]))
             
-            if movement_l >= 0.01:
+            if movement_l >= 0.01:  # 誤差修正
                 movement_l = 0.01
 
         self.track.append(movement_l)
